@@ -4,9 +4,15 @@ A spooky arcade game where you collect candy while avoiding ghosts!
 """
 
 import random
+from typing import Any
 
 from pgzero.actor import Actor
-from pgzero.builtins import keyboard, keys, screen  # type: ignore
+
+# Pygame Zero magic globals (injected at runtime by pgzrun)
+# Declaring them here prevents linter warnings while not affecting runtime
+screen: Any
+keyboard: Any
+keys: Any
 
 # Game constants
 WIDTH = 800

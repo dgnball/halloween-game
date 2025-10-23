@@ -35,7 +35,7 @@ repos:
     rev: 7.0.0
     hooks:
       - id: flake8
-        args: ["--ignore=E501,E226,F541"]
+        args: ["--ignore=F821,E501"]
 
 
   - repo: https://github.com/pycqa/isort
