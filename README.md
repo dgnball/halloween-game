@@ -118,6 +118,21 @@ See [assets/CREDITS.md](assets/CREDITS.md) for full attribution.
 
 All assets sourced from [OpenGameArt.org](https://opengameart.org/)
 
+## Development
+
+This project uses pre-commit for code quality. Install pre-commit hooks:
+
+```bash
+pre-commit install
+```
+
+To run checks manually:
+
+```bash
+pre-commit run --all-files
+```
+
+
 ## License
 
 Game code: MIT License (see individual implementation directories)

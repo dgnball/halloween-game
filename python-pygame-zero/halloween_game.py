@@ -6,6 +6,7 @@ A spooky arcade game where you collect candy while avoiding ghosts!
 import random
 
 from pgzero.actor import Actor
+from pgzero.builtins import keyboard, keys, screen  # type: ignore
 
 # Game constants
 WIDTH = 800
@@ -34,7 +35,7 @@ def init_player():
     """Initialize player actor (called on first draw)"""
     global player
     if player is None:
-        player = Actor('player')
+        player = Actor("player")
         player.pos = (WIDTH // 2, HEIGHT - 100)
 
 
@@ -60,12 +61,24 @@ def draw():
         screen.draw.text(f"Level: {difficulty}", (10, 50), color="white", fontsize=30)
     else:
         # Game over screen
-        screen.draw.text("GAME OVER!", center=(WIDTH//2, HEIGHT//2 - 50),
-                        color="red", fontsize=72)
-        screen.draw.text(f"Final Score: {score}", center=(WIDTH//2, HEIGHT//2 + 30),
-                        color="orange", fontsize=48)
-        screen.draw.text("Press SPACE to restart", center=(WIDTH//2, HEIGHT//2 + 100),
-                        color="white", fontsize=32)
+        screen.draw.text(
+            "GAME OVER!",
+            center=(WIDTH // 2, HEIGHT // 2 - 50),
+            color="red",
+            fontsize=72,
+        )
+        screen.draw.text(
+            f"Final Score: {score}",
+            center=(WIDTH // 2, HEIGHT // 2 + 30),
+            color="orange",
+            fontsize=48,
+        )
+        screen.draw.text(
+            "Press SPACE to restart",
+            center=(WIDTH // 2, HEIGHT // 2 + 100),
+            color="white",
+            fontsize=32,
+        )
 
 
 def update(dt):
@@ -120,7 +133,7 @@ def update(dt):
 
 def spawn_candy():
     """Spawn a candy at random position"""
-    candy = Actor('candy')
+    candy = Actor("candy")
     candy.x = random.randint(30, WIDTH - 30)
     candy.y = -20
     candies.append(candy)
@@ -128,7 +141,7 @@ def spawn_candy():
 
 def spawn_ghost():
     """Spawn a ghost at random position"""
-    ghost = Actor('ghost')
+    ghost = Actor("ghost")
     ghost.x = random.randint(30, WIDTH - 30)
     ghost.y = -20
     ghosts.append(ghost)
@@ -146,3 +159,9 @@ def on_key_down(key):
         candies.clear()
         ghosts.clear()
         player.pos = (WIDTH // 2, HEIGHT - 100)
+
+
+if __name__ == "__main__":
+    import pgzrun
+
+    pgzrun.go()
