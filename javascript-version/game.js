@@ -376,6 +376,7 @@ document.addEventListener('keydown', (e) => {
 
     if (e.code in keys) {
         keys[e.code] = true;
+        e.preventDefault(); // Prevent arrow keys from scrolling the page
     }
 
     if (e.code === 'Space' && gameOver) {
