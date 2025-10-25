@@ -13,6 +13,8 @@ from pgzero.actor import Actor
 screen: Any
 keyboard: Any
 keys: Any
+music: Any
+sounds: Any
 
 # Game constants
 WIDTH = 800
@@ -22,7 +24,6 @@ TITLE = "Halloween Candy Dash"
 # Available candy sprites
 CANDY_SPRITES = ["chock1", "chock2", "green sweet", "jbaby"]
 BADDY_SPRITES = ["bat", "spider"]
-# BADDY_SPRITES = [ "spider"]
 
 # Game state
 score = 0
@@ -41,18 +42,29 @@ bats = []
 spawn_timer = 0
 difficulty_timer = 0
 
+# Track if music has started
+music_started = False
+
 
 def init_player():
     """Initialize player actor (called on first draw)"""
-    global player
+    global player, music_started
     if player is None:
         player = Actor("pumpkin")
         player.pos = (WIDTH // 2, HEIGHT - 100)
+
+    # TODO: Start background music once when game begins
+    if not music_started:
+        music.play("halloween")
+        music_started = True
 
 
 def draw():
     """Draw all game elements"""
     init_player()  # Ensure player is initialized
+
+    # TODO: Draw background image
+    # screen.blit("background", (0, 0))
     screen.fill((20, 10, 40))  # Dark purple background
 
     if not game_over:
@@ -125,7 +137,7 @@ def update(dt):
         elif player.colliderect(candy):
             candies.remove(candy)
             score += 10
-            # Play sound effect (placeholder for when we add sounds)
+            sounds.heal.play()
 
     # Update bats
     for bat in bats[:]:
@@ -133,6 +145,7 @@ def update(dt):
         if bat.y > HEIGHT:
             bats.remove(bat)
         elif player.colliderect(bat):
+            sounds.scream.play()
             game_over = True
 
     # Increase difficulty over time
