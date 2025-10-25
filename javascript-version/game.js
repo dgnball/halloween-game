@@ -49,6 +49,14 @@ const keys = {
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
+// Touch/Mouse state
+let touchActive = false;
+let touchX = 0;
+let touchY = 0;
+
+// Game started flag (for iOS audio)
+let gameStarted = false;
+
 // Image loading
 const images = {};
 const imagesToLoad = [
@@ -207,7 +215,7 @@ function update(deltaTime) {
         return;
     }
 
-    // Player movement
+    // Player movement - keyboard
     if (keys.ArrowLeft && player.x > 25) {
         player.x -= playerSpeed;
     }
@@ -219,6 +227,23 @@ function update(deltaTime) {
     }
     if (keys.ArrowDown && player.y < HEIGHT - 25) {
         player.y += playerSpeed;
+    }
+
+    // Player movement - touch/mouse (smooth follow)
+    if (touchActive) {
+        const dx = touchX - player.x;
+        const dy = touchY - player.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance > 5) {
+            const moveSpeed = Math.min(playerSpeed, distance * 0.2);
+            player.x += (dx / distance) * moveSpeed;
+            player.y += (dy / distance) * moveSpeed;
+
+            // Clamp to bounds
+            player.x = Math.max(25, Math.min(WIDTH - 25, player.x));
+            player.y = Math.max(25, Math.min(HEIGHT - 25, player.y));
+        }
     }
 
     // Spawn candies and baddies
@@ -389,6 +414,92 @@ document.addEventListener('keyup', (e) => {
     if (e.code in keys) {
         keys[e.code] = false;
     }
+});
+
+/**
+ * Get canvas coordinates from touch/mouse event
+ */
+function getCanvasCoordinates(clientX, clientY) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = WIDTH / rect.width;
+    const scaleY = HEIGHT / rect.height;
+
+    return {
+        x: (clientX - rect.left) * scaleX,
+        y: (clientY - rect.top) * scaleY
+    };
+}
+
+/**
+ * Touch/Mouse event handlers
+ */
+canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    startMusic();
+
+    if (gameOver) {
+        resetGame();
+    } else {
+        const touch = e.touches[0];
+        const coords = getCanvasCoordinates(touch.clientX, touch.clientY);
+        touchX = coords.x;
+        touchY = coords.y;
+        touchActive = true;
+    }
+});
+
+canvas.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    if (touchActive && !gameOver) {
+        const touch = e.touches[0];
+        const coords = getCanvasCoordinates(touch.clientX, touch.clientY);
+        touchX = coords.x;
+        touchY = coords.y;
+    }
+});
+
+canvas.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    touchActive = false;
+});
+
+canvas.addEventListener('mousedown', (e) => {
+    e.preventDefault();
+    startMusic();
+
+    if (gameOver) {
+        resetGame();
+    } else {
+        const coords = getCanvasCoordinates(e.clientX, e.clientY);
+        touchX = coords.x;
+        touchY = coords.y;
+        touchActive = true;
+    }
+});
+
+canvas.addEventListener('mousemove', (e) => {
+    if (touchActive && !gameOver) {
+        const coords = getCanvasCoordinates(e.clientX, e.clientY);
+        touchX = coords.x;
+        touchY = coords.y;
+    }
+});
+
+canvas.addEventListener('mouseup', () => {
+    touchActive = false;
+});
+
+canvas.addEventListener('mouseleave', () => {
+    touchActive = false;
+});
+
+/**
+ * Start button handler (for iOS audio)
+ */
+document.getElementById('startButton').addEventListener('click', () => {
+    gameStarted = true;
+    startMusic();
+    document.getElementById('startOverlay').classList.add('hidden');
 });
 
 // Start loading images
