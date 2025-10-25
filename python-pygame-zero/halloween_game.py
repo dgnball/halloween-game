@@ -53,7 +53,6 @@ def init_player():
         player = Actor("pumpkin")
         player.pos = (WIDTH // 2, HEIGHT - 100)
 
-    # TODO: Start background music once when game begins
     if not music_started:
         music.play("halloween")
         music_started = True
@@ -63,9 +62,7 @@ def draw():
     """Draw all game elements"""
     init_player()  # Ensure player is initialized
 
-    # TODO: Draw background image
-    # screen.blit("background", (0, 0))
-    screen.fill((20, 10, 40))  # Dark purple background
+    screen.blit("background", (0, 0))
 
     if not game_over:
         # Draw player
