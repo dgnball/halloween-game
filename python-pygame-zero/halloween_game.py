@@ -1,6 +1,6 @@
 """
 Halloween Game - Pygame Zero Implementation
-A spooky arcade game where you collect candy while avoiding ghosts!
+A spooky arcade game where you collect candy while avoiding bats!
 """
 
 import random
@@ -19,6 +19,11 @@ WIDTH = 800
 HEIGHT = 600
 TITLE = "Halloween Candy Dash"
 
+# Available candy sprites
+CANDY_SPRITES = ["chock1", "chock2", "green sweet", "jbaby"]
+BADDY_SPRITES = ["bat", "spider"]
+# BADDY_SPRITES = [ "spider"]
+
 # Game state
 score = 0
 game_over = False
@@ -30,7 +35,7 @@ player_speed = 5
 
 # Collections
 candies = []
-ghosts = []
+bats = []
 
 # Timers
 spawn_timer = 0
@@ -41,7 +46,7 @@ def init_player():
     """Initialize player actor (called on first draw)"""
     global player
     if player is None:
-        player = Actor("player")
+        player = Actor("pumpkin")
         player.pos = (WIDTH // 2, HEIGHT - 100)
 
 
@@ -58,9 +63,9 @@ def draw():
         for candy in candies:
             candy.draw()
 
-        # Draw ghosts
-        for ghost in ghosts:
-            ghost.draw()
+        # Draw bats
+        for bat in bats:
+            bat.draw()
 
         # Draw score
         screen.draw.text(f"Score: {score}", (10, 10), color="orange", fontsize=36)
@@ -104,13 +109,13 @@ def update(dt):
     if keyboard.down and player.y < HEIGHT - 25:
         player.y += player_speed
 
-    # Spawn candies and ghosts
+    # Spawn candies and bats
     spawn_timer += dt
     if spawn_timer > max(0.5, 2.0 - difficulty * 0.2):
         spawn_timer = 0
         spawn_candy()
-        if random.random() < 0.3 + (difficulty * 0.05):  # Increasing ghost spawn rate
-            spawn_ghost()
+        if random.random() < 0.3 + (difficulty * 0.05):  # Increasing bat spawn rate
+            spawn_bat()
 
     # Update candies
     for candy in candies[:]:
@@ -122,12 +127,12 @@ def update(dt):
             score += 10
             # Play sound effect (placeholder for when we add sounds)
 
-    # Update ghosts
-    for ghost in ghosts[:]:
-        ghost.y += 3 + difficulty * 0.5
-        if ghost.y > HEIGHT:
-            ghosts.remove(ghost)
-        elif player.colliderect(ghost):
+    # Update bats
+    for bat in bats[:]:
+        bat.y += 3 + difficulty * 0.5
+        if bat.y > HEIGHT:
+            bats.remove(bat)
+        elif player.colliderect(bat):
             game_over = True
 
     # Increase difficulty over time
@@ -138,24 +143,26 @@ def update(dt):
 
 
 def spawn_candy():
-    """Spawn a candy at random position"""
-    candy = Actor("candy")
+    """Spawn a candy at random position with random sprite"""
+    candy_sprite = random.choice(CANDY_SPRITES)
+    candy = Actor(candy_sprite)
     candy.x = random.randint(30, WIDTH - 30)
     candy.y = -20
     candies.append(candy)
 
 
-def spawn_ghost():
-    """Spawn a ghost at random position"""
-    ghost = Actor("ghost")
-    ghost.x = random.randint(30, WIDTH - 30)
-    ghost.y = -20
-    ghosts.append(ghost)
+def spawn_bat():
+    """Spawn a bat at random position"""
+    baddy_sprite = random.choice(BADDY_SPRITES)
+    baddy = Actor(baddy_sprite)
+    baddy.x = random.randint(30, WIDTH - 30)
+    baddy.y = -20
+    bats.append(baddy)
 
 
 def on_key_down(key):
     """Handle key presses"""
-    global game_over, score, difficulty, candies, ghosts
+    global game_over, score, difficulty, candies, bats
 
     if key == keys.SPACE and game_over:
         # Restart game
@@ -163,7 +170,7 @@ def on_key_down(key):
         score = 0
         difficulty = 1
         candies.clear()
-        ghosts.clear()
+        bats.clear()
         player.pos = (WIDTH // 2, HEIGHT - 100)
 
 
