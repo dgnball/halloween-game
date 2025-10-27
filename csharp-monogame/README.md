@@ -30,13 +30,8 @@ To build and run this game, you'll need:
 ### Command Line
 
 ```bash
-# Navigate to the csharp-nez directory
-cd csharp-nez
-
-# Restore NuGet packages
+cd csharp-monogame
 dotnet restore
-
-# Build and run the project
 dotnet run
 ```
 
@@ -47,12 +42,6 @@ That's it! The game will launch in a new window.
 1. Open `HalloweenGame.csproj` in Visual Studio
 2. Press **F5** or click the **Start** button
 3. The game will build and launch automatically
-
-### Visual Studio Code
-
-1. Open the `csharp-nez` folder in VS Code
-2. Install the C# extension if you haven't already
-3. Press **F5** to run
 
 ## Game Controls
 
@@ -68,17 +57,6 @@ That's it! The game will launch in a new window.
 - Difficulty increases every 15 seconds
 - Try to get the highest score!
 
-## Project Structure
-
-```
-csharp-nez/
-├── HalloweenGame.csproj      # Project file
-├── Program.cs                # Entry point
-├── HalloweenGameMain.cs      # Main game class (all game logic)
-├── images/                   # Sprite images
-├── sounds/                   # Sound effects
-└── music/                    # Background music
-```
 
 ## Technical Details
 
@@ -146,7 +124,7 @@ The built executable will be in `bin/Release/net9.0/{runtime}/publish/`
 
 ### Game runs but sprites don't appear
 - Images are being loaded from the working directory
-- Make sure you run from the `csharp-nez` folder
+- Make sure you run from the `csharp-monogame` folder
 - Assets are automatically copied to output directory via `.csproj` rules
 
 ## Enhancing the Game
